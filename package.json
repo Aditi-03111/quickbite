@@ -1,0 +1,21 @@
+{
+  "name": "f",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "vite": "^8.0.14"
+  },
+  "dependencies": {
+    "@clerk/clerk-js": "^6.12.1",
+    "@supabase/supabase-js": "^2.106.2"
+  }
+}
