@@ -362,8 +362,14 @@ async function placeOrder(event) {
     items: cart.slice()
   };
   closeModal('checkout-modal');
+  // Save locally first (fallback)
   saveLocalOrder(orderData);
-  if (typeof window.saveOrder === 'function') await window.saveOrder(orderData);
+  // Attempt remote save
+  var remoteResult = typeof window.saveOrder === 'function' ? await window.saveOrder(orderData) : null;
+  // If remote succeeded, clear local orders
+  if (remoteResult && remoteResult.success) {
+    localStorage.removeItem('quickbite_orders');
+  }
   cart = [];
   updateCart();
   setTimeout(function() { openModal('success-modal'); }, 300);
