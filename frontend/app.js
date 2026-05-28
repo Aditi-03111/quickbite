@@ -1,18 +1,18 @@
 import { DELIVERY_FEE, formatCurrency, formatDeliveryFee, toRupees } from './currency.js';
 
 const categories = [
-  { icon: '🍕', name: 'Pizza' },
-  { icon: '🍔', name: 'Burgers' },
-  { icon: '🍣', name: 'Sushi' },
-  { icon: '🌮', name: 'Mexican' },
-  { icon: '🍜', name: 'Noodles' },
-  { icon: '🍛', name: 'Indian' },
-  { icon: '🥗', name: 'Salads' },
-  { icon: '🍰', name: 'Desserts' },
-  { icon: '🥪', name: 'Sandwiches' },
-  { icon: '🍗', name: 'Chicken' },
-  { icon: '🥩', name: 'Steaks' },
-  { icon: '🧆', name: 'Vegan' },
+  { icon: '🍕', name: 'Pizza', image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=200&q=80&auto=format&fit=crop' },
+  { icon: '🍔', name: 'Burgers', image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=200&q=80&auto=format&fit=crop' },
+  { icon: '🍣', name: 'Sushi', image: 'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=200&q=80&auto=format&fit=crop' },
+  { icon: '🌮', name: 'Mexican', image: 'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=200&q=80&auto=format&fit=crop' },
+  { icon: '🍜', name: 'Noodles', image: 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=200&q=80&auto=format&fit=crop' },
+  { icon: '🍛', name: 'Indian', image: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=200&q=80&auto=format&fit=crop' },
+  { icon: '🥗', name: 'Salads', image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=200&q=80&auto=format&fit=crop' },
+  { icon: '🍰', name: 'Desserts', image: 'https://images.unsplash.com/photo-1551024601-bec78aea704b?w=200&q=80&auto=format&fit=crop' },
+  { icon: '🥪', name: 'Sandwiches', image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=200&q=80&auto=format&fit=crop' },
+  { icon: '🍗', name: 'Chicken', image: 'https://images.unsplash.com/photo-1567620832903-9fc6debc209f?w=200&q=80&auto=format&fit=crop' },
+  { icon: '🥩', name: 'Steaks', image: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=200&q=80&auto=format&fit=crop' },
+  { icon: '🧆', name: 'Vegan', image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=200&q=80&auto=format&fit=crop' },
 ];
 
 const restaurants = [
@@ -176,7 +176,9 @@ function renderCategories() {
   if (!grid) return;
   grid.innerHTML = categories.map(function(c) {
     return '<div class="category-card" onclick="selectCategory(\'' + c.name.toLowerCase() + '\', this)" tabindex="0" role="button">' +
-      '<div class="category-icon">' + c.icon + '</div>' +
+      '<div class="category-img-wrapper">' +
+      '<img src="' + c.image + '" alt="' + c.name + '" class="category-card-img" />' +
+      '</div>' +
       '<div class="category-name">' + c.name + '</div></div>';
   }).join('');
 }
