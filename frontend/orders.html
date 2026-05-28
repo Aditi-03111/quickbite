@@ -29,6 +29,25 @@
     .empty-orders div { font-size: 3.5rem; margin-bottom: 16px; }
     .empty-orders h3 { font-size: 1.3rem; font-weight: 700; margin-bottom: 8px; color: var(--text); }
     .loading { text-align: center; padding: 60px 0; color: var(--text-muted); font-size: 1rem; }
+    .track-order-section { padding: 0 0 80px; background: var(--bg); }
+    .track-panel { background: #fff; border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 28px; box-shadow: var(--shadow-md); }
+    .track-panel-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; margin-bottom: 22px; flex-wrap: wrap; }
+    .track-panel h2 { font-size: 1.6rem; font-weight: 800; margin-bottom: 6px; }
+    .track-panel p { color: var(--text-muted); }
+    .track-countdown { min-width: 120px; padding: 10px 14px; border-radius: 12px; background: var(--primary-light); color: var(--primary); text-align: center; font-weight: 800; }
+    .track-countdown span { display: block; font-size: 0.72rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+    .track-timeline { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 22px 0; }
+    .track-card { border: 1px solid var(--border); border-radius: 12px; padding: 14px; background: var(--bg-soft); color: var(--text-muted); font-size: 0.84rem; }
+    .track-card strong { display: block; color: var(--text); margin-bottom: 4px; }
+    .track-card.active { border-color: var(--primary); background: var(--primary-light); color: var(--primary); }
+    .track-card.delivered { border-color: #86efac; background: #ecfdf5; color: #166534; }
+    .track-route { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 20px; }
+    .track-route div { padding: 14px; border-radius: 12px; background: var(--bg-soft); }
+    .track-route span { display: block; color: var(--text-muted); font-size: 0.74rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 4px; }
+    .order-track-btn { border: none; background: var(--primary-light); color: var(--primary); border-radius: 8px; padding: 8px 12px; font-weight: 700; cursor: pointer; }
+    @media (max-width: 720px) {
+      .track-timeline, .track-route { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
@@ -40,6 +59,7 @@
         <a href="menu.html">Menu</a>
         <a href="index.html#restaurants">Restaurants</a>
         <a href="index.html#how-it-works">How it works</a>
+        <a href="#track-order">Track Order</a>
         <a href="orders.html" style="color:var(--primary)">My Orders</a>
       </nav>
       <div class="nav-actions">
@@ -63,6 +83,34 @@
       <div id="orders-list"><div class="loading">Loading your orders…</div></div>
     </div>
   </main>
+
+  <section class="track-order-section" id="track-order">
+    <div class="container">
+      <div class="track-panel">
+        <div class="track-panel-header">
+          <div>
+            <p class="section-eyebrow" style="color:var(--primary)">Live demo</p>
+            <h2>Track Order QB-1027</h2>
+            <p id="track-status-text">Your rider is picking up the order in Bengaluru.</p>
+          </div>
+          <div class="track-countdown"><span>ETA</span><strong id="track-countdown">15s</strong></div>
+        </div>
+
+        <div class="track-timeline">
+          <div class="track-card active" data-track-step="0"><strong>Received</strong>Order confirmed</div>
+          <div class="track-card" data-track-step="1"><strong>Preparing</strong>Kitchen is packing it</div>
+          <div class="track-card" data-track-step="2"><strong>On the way</strong>Rider near MG Road</div>
+          <div class="track-card" data-track-step="3"><strong>Delivered</strong>Reached Koramangala</div>
+        </div>
+
+        <div class="track-route">
+          <div><span>Pickup</span><strong>Spice Garden, Indiranagar</strong></div>
+          <div><span>Current location</span><strong id="track-location">Indiranagar 100 Feet Road</strong></div>
+          <div><span>Drop-off</span><strong>Koramangala 5th Block, Bengaluru</strong></div>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <div class="toast" id="toast"></div>
 

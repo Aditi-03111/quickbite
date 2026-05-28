@@ -13,10 +13,23 @@ function showToast(msg) {
   toastTimer = setTimeout(function() { t.classList.remove('show'); }, 2500);
 }
 
+function getLocalOrders() {
+  try {
+    return JSON.parse(localStorage.getItem('quickbite_orders') || '[]');
+  } catch (err) {
+    return [];
+  }
+}
+
 async function loadOrders() {
   var el = document.getElementById('orders-list');
   try {
-    const orders = await fetchOrders();
+    const apiOrders = await fetchOrders();
+    const localOrders = getLocalOrders();
+    const apiIds = new Set((apiOrders || []).map(function(o) { return String(o.id); }));
+    const orders = (apiOrders || []).concat(localOrders.filter(function(o) {
+      return !apiIds.has(String(o.id));
+    }));
     if (!orders || orders.length === 0) {
       el.innerHTML = '<div class="empty-orders"><div>🛍️</div><h3>No orders yet</h3><p>Place your first order from the <a href="menu.html" style="color:var(--primary)">menu</a></p></div>';
       return;
@@ -35,7 +48,7 @@ async function loadOrders() {
         '<div class="order-meta"><span>📅 ' + date + '</span><span>📍 ' + o.address + '</span><span>💳 ' + (o.payment_method || '') + '</span></div>' +
         '<div class="order-items-list">' + itemsHtml +
         '<div class="order-total-row"><span>Total</span><span>' + formatCurrency(normalizeStoredOrderAmount(o.total)) + '</span></div>' +
-        '</div></div>';
+        '</div><button class="order-track-btn" onclick="scrollToTrackOrder()">Track order</button></div>';
     }).join('');
   } catch (err) {
     el.innerHTML = '<div class="empty-orders"><div>⚠️</div><h3>Could not load orders</h3><p>' + err.message + '</p></div>';
@@ -43,9 +56,54 @@ async function loadOrders() {
   }
 }
 
+function startTrackOrderDemo() {
+  var totalSeconds = 15;
+  var remaining = totalSeconds;
+  var countdownEl = document.getElementById('track-countdown');
+  var statusEl = document.getElementById('track-status-text');
+  var locationEl = document.getElementById('track-location');
+  var steps = Array.from(document.querySelectorAll('[data-track-step]'));
+  if (!countdownEl || !statusEl || !locationEl || steps.length === 0) return;
+
+  function setStep(stepIndex, text, location) {
+    steps.forEach(function(step, index) {
+      step.classList.toggle('active', index === stepIndex);
+      step.classList.toggle('delivered', stepIndex === 3 && index === 3);
+    });
+    statusEl.textContent = text;
+    locationEl.textContent = location;
+  }
+
+  setStep(0, 'Your rider is picking up the order in Bengaluru.', 'Indiranagar 100 Feet Road');
+  countdownEl.textContent = remaining + 's';
+
+  var timer = setInterval(function() {
+    remaining -= 1;
+    countdownEl.textContent = Math.max(remaining, 0) + 's';
+
+    if (remaining === 10) {
+      setStep(1, 'Spice Garden is packing your order now.', 'Spice Garden, Indiranagar');
+    }
+    if (remaining === 5) {
+      setStep(2, 'Your rider is on the way through MG Road.', 'Near Trinity Metro, MG Road');
+    }
+    if (remaining <= 0) {
+      clearInterval(timer);
+      countdownEl.textContent = 'Delivered';
+      setStep(3, 'Delivered to Koramangala 5th Block. Enjoy your meal!', 'Koramangala 5th Block');
+      showToast('Demo order delivered');
+    }
+  }, 1000);
+}
+
+function scrollToTrackOrder() {
+  document.getElementById('track-order')?.scrollIntoView({ behavior: 'smooth' });
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
   await initClerk();
   await loadOrders();
+  startTrackOrderDemo();
 
   var navbar = document.getElementById('navbar');
   if (navbar) {
@@ -54,3 +112,5 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 });
+
+window.scrollToTrackOrder = scrollToTrackOrder;

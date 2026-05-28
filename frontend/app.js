@@ -338,7 +338,7 @@ function toggleCart() {
   document.getElementById('cart-overlay').classList.toggle('open');
 }
 
-function placeOrder(event) {
+async function placeOrder(event) {
   event.preventDefault();
   var clerkUserId = typeof window.getClerkUserId === 'function' ? window.getClerkUserId() : null;
   if (!clerkUserId) {
@@ -360,10 +360,36 @@ function placeOrder(event) {
     items: cart.slice()
   };
   closeModal('checkout-modal');
-  if (typeof saveOrder === 'function') saveOrder(orderData);
+  saveLocalOrder(orderData);
+  if (typeof window.saveOrder === 'function') await window.saveOrder(orderData);
   cart = [];
   updateCart();
   setTimeout(function() { openModal('success-modal'); }, 300);
+}
+
+function saveLocalOrder(orderData) {
+  var orders = JSON.parse(localStorage.getItem('quickbite_orders') || '[]');
+  orders.unshift({
+    id: 'QB' + Date.now().toString().slice(-6),
+    customer_name: orderData.name,
+    phone: orderData.phone,
+    address: orderData.address,
+    payment_method: orderData.payment,
+    subtotal: orderData.subtotal,
+    delivery_fee: DELIVERY_FEE,
+    total: orderData.total,
+    status: 'received',
+    created_at: new Date().toISOString(),
+    order_items: orderData.items.map(function(item) {
+      return {
+        item_name: item.name,
+        emoji: item.emoji,
+        price: item.price,
+        qty: item.qty
+      };
+    })
+  });
+  localStorage.setItem('quickbite_orders', JSON.stringify(orders.slice(0, 10)));
 }
 
 function openModal(id) {
