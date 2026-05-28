@@ -1,41 +1,40 @@
-// Clerk is loaded via CDN script tag in HTML, not as npm import
-// This file just wires up the UI
+import { Clerk } from '@clerk/clerk-js';
 
 let clerkReady = false;
-let clerkLoadPromise = null;
+let clerkInitPromise = null;
 
 export async function initClerk() {
   const key = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
+
+  if (!key) {
+    console.warn('Missing VITE_CLERK_PUBLISHABLE_KEY. Clerk sign-in is disabled.');
+    updateNavAuth(null);
+    return;
+  }
 
   if (clerkReady) {
     updateNavAuth(window.__clerk);
     return;
   }
 
-  if (!clerkLoadPromise) clerkLoadPromise = new Promise((resolve, reject) => {
-    const script = document.createElement('script');
-    script.async = true;
-    script.src = `https://outgoing-sheepdog-64.clerk.accounts.dev/npm/@clerk/clerk-js@latest/dist/clerk.browser.js`;
-    script.onload = resolve;
-    script.onerror = () => {
-      // fallback to jsdelivr
-      const s2 = document.createElement('script');
-      s2.src = 'https://cdn.jsdelivr.net/npm/@clerk/clerk-js@6/dist/clerk.browser.js';
-      s2.onload = resolve;
-      s2.onerror = reject;
-      document.head.appendChild(s2);
-    };
-    document.head.appendChild(script);
-  });
+  if (!clerkInitPromise) {
+    clerkInitPromise = (async () => {
+      const clerk = new Clerk(key);
+      await clerk.load();
+      window.__clerk = clerk;
+      clerkReady = true;
 
-  await clerkLoadPromise;
-  const clerk = new window.Clerk(key);
-  await clerk.load();
-  window.__clerk = clerk;
-  clerkReady = true;
+      updateNavAuth(clerk);
+      clerk.addListener(() => updateNavAuth(window.__clerk));
+    })().catch((error) => {
+      clerkInitPromise = null;
+      console.error('Clerk failed to initialize:', error);
+      updateNavAuth(null);
+      throw error;
+    });
+  }
 
-  updateNavAuth(clerk);
-  clerk.addListener(() => updateNavAuth(window.__clerk));
+  await clerkInitPromise;
 }
 
 export function getClerkUserId() {
@@ -77,8 +76,14 @@ export function updateNavAuth(clerk) {
 }
 
 window.clerkSignIn = async () => {
-  if (!clerkReady) await initClerk();
-  await window.__clerk?.redirectToSignIn({ redirectUrl: window.location.href });
+  try {
+    if (!clerkReady) await initClerk();
+    await window.__clerk?.redirectToSignIn({
+      signInFallbackRedirectUrl: window.location.href
+    });
+  } catch (error) {
+    console.error('Clerk sign-in failed:', error);
+  }
 };
 
 window.clerkSignOut = async () => {
