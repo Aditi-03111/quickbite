@@ -86,8 +86,11 @@ export function isClerkSignedIn() {
 window.clerkSignIn = async () => {
   try {
     if (!initialized) await initClerk();
+    const returnUrl = window.location.href;
     await clerk?.redirectToSignIn({
-      signInFallbackRedirectUrl: window.location.href
+      redirectUrl: returnUrl,
+      signInFallbackRedirectUrl: returnUrl,
+      signUpFallbackRedirectUrl: returnUrl
     });
   } catch (err) {
     console.error('Clerk sign-in error:', err);
