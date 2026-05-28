@@ -1,4 +1,6 @@
 // All data goes through the Express backend — no Supabase keys in frontend
+import { toRupees } from './currency.js';
+
 const API_URL = import.meta.env.VITE_API_URL || '';
 
 async function getAuthHeaders() {
@@ -33,7 +35,7 @@ export async function loadRestaurants() {
           items: (s.menu_items || []).map(i => ({
             name: i.name,
             desc: i.description,
-            price: parseFloat(i.price),
+            price: toRupees(i.price),
             img: i.img,
             emoji: i.emoji
           }))

@@ -1,4 +1,5 @@
 import { initClerk } from './clerk.js';
+import { formatCurrency, normalizeStoredOrderAmount } from './currency.js';
 import { fetchOrders } from './supabase.js';
 
 var toastTimer;
@@ -24,7 +25,7 @@ async function loadOrders() {
       var date = new Date(o.created_at).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' });
       var statusClass = 'status-' + (o.status || 'received');
       var itemsHtml = (o.order_items || []).map(function(i) {
-        return '<div class="order-item-row"><span>' + (i.emoji || '') + ' ' + i.item_name + ' × ' + i.qty + '</span><span>$' + (i.price * i.qty).toFixed(2) + '</span></div>';
+        return '<div class="order-item-row"><span>' + (i.emoji || '') + ' ' + i.item_name + ' × ' + i.qty + '</span><span>' + formatCurrency(normalizeStoredOrderAmount(i.price) * i.qty) + '</span></div>';
       }).join('');
       return '<div class="order-card">' +
         '<div class="order-header">' +
@@ -33,7 +34,7 @@ async function loadOrders() {
         '</div>' +
         '<div class="order-meta"><span>📅 ' + date + '</span><span>📍 ' + o.address + '</span><span>💳 ' + (o.payment_method || '') + '</span></div>' +
         '<div class="order-items-list">' + itemsHtml +
-        '<div class="order-total-row"><span>Total</span><span>$' + parseFloat(o.total).toFixed(2) + '</span></div>' +
+        '<div class="order-total-row"><span>Total</span><span>' + formatCurrency(normalizeStoredOrderAmount(o.total)) + '</span></div>' +
         '</div></div>';
     }).join('');
   } catch (err) {

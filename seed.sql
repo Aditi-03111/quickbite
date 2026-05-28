@@ -2,12 +2,12 @@
 -- Run this AFTER schema.sql in Supabase SQL Editor
 
 insert into restaurants (name, img, rating, delivery_time, delivery_fee, tags, badge) values
-('Mario''s Pizzeria',  'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&q=80&auto=format&fit=crop', 4.8, '20-30 min', '$1.99', array['pizza','italian'], 'Popular'),
-('Burger Barn',        'https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?w=600&q=80&auto=format&fit=crop', 4.6, '15-25 min', '$0.99', array['burgers','american'], 'Fast delivery'),
-('Tokyo Sushi Bar',    'https://images.unsplash.com/photo-1514190051997-0f6f39ca5cde?w=600&q=80&auto=format&fit=crop', 4.9, '25-40 min', '$2.49', array['sushi','japanese'], 'Top rated'),
-('Spice Garden',       'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&q=80&auto=format&fit=crop', 4.7, '30-45 min', '$1.49', array['indian','curry'], null),
-('Taco Fiesta',        'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80&auto=format&fit=crop', 4.5, '15-25 min', '$1.29', array['mexican','tacos'], 'New'),
-('Noodle House',       'https://images.unsplash.com/photo-1552566626-52f8b828add9?w=600&q=80&auto=format&fit=crop', 4.6, '20-35 min', '$1.99', array['noodles','asian'], null);
+('Mario''s Pizzeria',  'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&q=80&auto=format&fit=crop', 4.8, '20-30 min', '₹49', array['pizza','italian'], 'Popular'),
+('Burger Barn',        'https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?w=600&q=80&auto=format&fit=crop', 4.6, '15-25 min', '₹39', array['burgers','american'], 'Fast delivery'),
+('Tokyo Sushi Bar',    'https://images.unsplash.com/photo-1514190051997-0f6f39ca5cde?w=600&q=80&auto=format&fit=crop', 4.9, '25-40 min', '₹69', array['sushi','japanese'], 'Top rated'),
+('Spice Garden',       'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&q=80&auto=format&fit=crop', 4.7, '30-45 min', '₹59', array['indian','curry'], null),
+('Taco Fiesta',        'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80&auto=format&fit=crop', 4.5, '15-25 min', '₹49', array['mexican','tacos'], 'New'),
+('Noodle House',       'https://images.unsplash.com/photo-1552566626-52f8b828add9?w=600&q=80&auto=format&fit=crop', 4.6, '20-35 min', '₹49', array['noodles','asian'], null);
 
 -- Mario's Pizzeria sections
 insert into menu_sections (restaurant_id, name, sort_order) values (1,'Pizzas',1),(1,'Sides',2);

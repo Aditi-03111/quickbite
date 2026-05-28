@@ -1,3 +1,5 @@
+import { formatCurrency, formatDeliveryFee, toRupees } from './currency.js';
+
 var activeTag = 'all';
 
 function initMenuPage() {
@@ -62,7 +64,7 @@ function renderMenuPage(query) {
     html += '<div class="rmb-header">';
     html += '<div class="rmb-img"><img src="' + r.img + '" alt="' + r.name + '" /></div>';
     html += '<div class="rmb-info"><h2>' + r.name + '</h2>';
-    html += '<div class="rmb-meta"><span>⭐ ' + r.rating + '</span><span>🕐 ' + r.time + '</span><span>🚴 ' + r.fee + ' delivery</span></div>';
+    html += '<div class="rmb-meta"><span>⭐ ' + r.rating + '</span><span>🕐 ' + r.time + '</span><span>🚴 ' + formatDeliveryFee(r.fee) + ' delivery</span></div>';
     html += '</div></div>';
 
     html += '<div class="menu-grid">';
@@ -81,7 +83,7 @@ function renderMenuPage(query) {
       html += '<div class="menu-card-name">' + item.name + '</div>';
       html += '<div class="menu-card-desc">' + item.desc + '</div>';
       html += '<div class="menu-card-footer">';
-      html += '<span class="menu-card-price">$' + item.price.toFixed(2) + '</span>';
+      html += '<span class="menu-card-price">' + formatCurrency(toRupees(item.price)) + '</span>';
       html += '<button class="add-btn" onclick="addToCart(\'' + item.name.replace(/'/g, '') + '\', ' + item.price + ', \'' + item.emoji + '\', event)">Add to cart</button>';
       html += '</div></div></div>';
     });

@@ -19,7 +19,8 @@ app.use(cors({
   origin: [
     'http://localhost:5173',
     'http://localhost:4173',
-    'https://quickbite-frontend.onrender.com'
+    'https://quickbite-frontend.onrender.com',
+    'https://quickbite-indol.vercel.app'
   ]
 }));
 app.use(express.json());
@@ -96,7 +97,7 @@ app.post('/api/orders', requireUser, async (req, res) => {
       .insert({
         clerk_user_id: req.userId,
         customer_name, phone, address, payment_method,
-        subtotal, delivery_fee: 2.99, total, status: 'received'
+        subtotal, delivery_fee: 49, total, status: 'received'
       })
       .select()
       .single();

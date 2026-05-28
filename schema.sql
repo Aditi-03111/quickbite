@@ -4,7 +4,7 @@ create table menu_sections (id serial primary key, restaurant_id int references 
 
 create table menu_items (id serial primary key, section_id int references menu_sections(id) on delete cascade, restaurant_id int references restaurants(id) on delete cascade, name text not null, description text, price numeric(8,2) not null, img text, emoji text);
 
-create table orders (id serial primary key, clerk_user_id text not null, customer_name text not null, phone text, address text not null, payment_method text, subtotal numeric(8,2), delivery_fee numeric(8,2) default 2.99, total numeric(8,2), status text default 'received', created_at timestamptz default now());
+create table orders (id serial primary key, clerk_user_id text not null, customer_name text not null, phone text, address text not null, payment_method text, subtotal numeric(8,2), delivery_fee numeric(8,2) default 49, total numeric(8,2), status text default 'received', created_at timestamptz default now());
 
 create table order_items (id serial primary key, order_id int references orders(id) on delete cascade, item_name text not null, emoji text, price numeric(8,2), qty int default 1);
 

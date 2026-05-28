@@ -285,9 +285,9 @@
       </div>
     </div>
     <div class="cart-footer" id="cart-footer" style="display:none">
-      <div class="cart-subtotal"><span>Subtotal</span><span id="cart-subtotal">$0.00</span></div>
-      <div class="cart-subtotal"><span>Delivery fee</span><span>$2.99</span></div>
-      <div class="cart-total"><span>Total</span><span id="cart-total">$0.00</span></div>
+      <div class="cart-subtotal"><span>Subtotal</span><span id="cart-subtotal">₹0</span></div>
+      <div class="cart-subtotal"><span>Delivery fee</span><span>₹49</span></div>
+      <div class="cart-total"><span>Total</span><span id="cart-total">₹0</span></div>
       <button class="btn btn-primary btn-full" onclick="openModal('checkout-modal')">Checkout →</button>
     </div>
   </aside>
@@ -318,18 +318,18 @@
           </div>
           <div class="form-group">
             <label>Phone number</label>
-            <input type="tel" placeholder="+1 555 000 0000" required />
+            <input type="tel" placeholder="+91 98765 43210" required />
           </div>
         </div>
         <div class="form-group">
           <label>Delivery address</label>
-          <input type="text" placeholder="123 Main St, City, State" required />
+          <input type="text" placeholder="Indiranagar, Bengaluru" required />
         </div>
         <div class="form-group">
           <label>Payment method</label>
           <select>
             <option>💳 Credit / Debit card</option>
-            <option>🅿️ PayPal</option>
+            <option>📱 UPI</option>
             <option>💵 Cash on delivery</option>
           </select>
         </div>
@@ -354,7 +354,30 @@
         <div class="track-line"></div>
         <div class="track-step"><div class="track-dot"></div><span>Delivered</span></div>
       </div>
-      <button class="btn btn-primary btn-full" onclick="closeModal('success-modal')">Track my order →</button>
+      <button class="btn btn-primary btn-full" onclick="showDemoTracking()">Track my order →</button>
+    </div>
+  </div>
+
+  <!-- DEMO TRACKING MODAL -->
+  <div class="modal-overlay" id="tracking-modal" onclick="closeModalOnOverlay(event, 'tracking-modal')">
+    <div class="modal modal-center">
+      <button class="modal-close" onclick="closeModal('tracking-modal')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+      <h2>Tracking demo</h2>
+      <p class="modal-sub">Your rider is on the way through Bengaluru. Estimated arrival: <strong>18 min</strong></p>
+      <div class="demo-map">
+        <div class="map-road map-road-one"></div>
+        <div class="map-road map-road-two"></div>
+        <div class="map-pin restaurant-pin">Restaurant<br><strong>Indiranagar</strong></div>
+        <div class="map-pin rider-pin">Rider<br><strong>MG Road</strong></div>
+        <div class="map-pin home-pin">You<br><strong>Koramangala</strong></div>
+      </div>
+      <div class="tracking-details">
+        <div><span>Pickup</span><strong>Spice Garden, Indiranagar</strong></div>
+        <div><span>Current location</span><strong>Near Trinity Metro, MG Road</strong></div>
+        <div><span>Drop-off</span><strong>Koramangala 5th Block, Bengaluru</strong></div>
+      </div>
     </div>
   </div>
 

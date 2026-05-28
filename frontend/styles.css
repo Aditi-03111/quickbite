@@ -280,6 +280,20 @@ img { max-width: 100%; display: block; }
 .track-step.active .track-dot { background: var(--primary); border-color: var(--primary); box-shadow: 0 0 0 4px rgba(255,69,0,0.2); }
 .track-step.active { color: var(--primary); }
 .track-line { flex: 1; height: 2px; background: var(--border); min-width: 30px; max-width: 60px; }
+.demo-map { position: relative; height: 260px; margin: 22px 0; overflow: hidden; border: 1px solid var(--border); border-radius: var(--radius); background: linear-gradient(135deg, #fffbea 0%, #f2fbf6 52%, #eef7ff 100%); }
+.map-road { position: absolute; height: 20px; border-radius: 999px; background: rgba(42, 50, 58, 0.12); }
+.map-road-one { width: 110%; left: -5%; top: 128px; transform: rotate(-12deg); }
+.map-road-two { width: 86%; left: 8%; top: 96px; transform: rotate(28deg); }
+.map-pin { position: absolute; min-width: 116px; padding: 9px 11px; border-radius: 10px; background: #fff; border: 1px solid var(--border); box-shadow: var(--shadow-md); font-size: 0.72rem; color: var(--text-muted); line-height: 1.35; text-align: left; }
+.map-pin strong { color: var(--text); font-size: 0.78rem; }
+.restaurant-pin { left: 18px; top: 36px; }
+.rider-pin { left: 50%; top: 104px; transform: translateX(-50%); border-color: var(--primary); }
+.rider-pin::after { content: ''; position: absolute; left: 50%; bottom: -18px; width: 14px; height: 14px; border-radius: 50%; background: var(--primary); box-shadow: 0 0 0 5px rgba(255,69,0,0.18); transform: translateX(-50%); }
+.home-pin { right: 18px; bottom: 34px; }
+.tracking-details { display: grid; gap: 10px; text-align: left; }
+.tracking-details div { display: flex; flex-direction: column; gap: 3px; padding: 12px 14px; background: var(--bg-soft); border-radius: 10px; }
+.tracking-details span { font-size: 0.72rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
+.tracking-details strong { font-size: 0.9rem; color: var(--text); }
 
 /* ===== TOAST ===== */
 .toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(80px); background: #0f0f0f; color: #fff; padding: 13px 24px; border-radius: 10px; font-size: 0.88rem; font-weight: 500; z-index: 500; transition: transform 0.3s cubic-bezier(0.4,0,0.2,1); pointer-events: none; box-shadow: var(--shadow-lg); white-space: nowrap; }
@@ -320,6 +334,8 @@ img { max-width: 100%; display: block; }
   .form-row { grid-template-columns: 1fr; }
   .modal { padding: 28px 20px; }
   .nav-actions .btn-ghost { display: none; }
+  .demo-map { height: 230px; }
+  .map-pin { min-width: 98px; font-size: 0.68rem; }
 }
 
 /* ===== USER MENU ===== */

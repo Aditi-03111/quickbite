@@ -1,3 +1,5 @@
+import { DELIVERY_FEE, formatCurrency, formatDeliveryFee, toRupees } from './currency.js';
+
 const categories = [
   { icon: '🍕', name: 'Pizza' },
   { icon: '🍔', name: 'Burgers' },
@@ -18,7 +20,7 @@ const restaurants = [
     id: 1,
     name: "Mario's Pizzeria",
     img: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&q=80&auto=format&fit=crop',
-    rating: 4.8, time: '20-30 min', fee: '$1.99',
+    rating: 4.8, time: '20-30 min', fee: '₹49',
     tags: ['pizza', 'italian'], badge: 'Popular',
     menu: [
       {
@@ -41,7 +43,7 @@ const restaurants = [
     id: 2,
     name: 'Burger Barn',
     img: 'https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?w=600&q=80&auto=format&fit=crop',
-    rating: 4.6, time: '15-25 min', fee: '$0.99',
+    rating: 4.6, time: '15-25 min', fee: '₹39',
     tags: ['burgers', 'american'], badge: 'Fast delivery',
     menu: [
       {
@@ -64,7 +66,7 @@ const restaurants = [
     id: 3,
     name: 'Tokyo Sushi Bar',
     img: 'https://images.unsplash.com/photo-1514190051997-0f6f39ca5cde?w=600&q=80&auto=format&fit=crop',
-    rating: 4.9, time: '25-40 min', fee: '$2.49',
+    rating: 4.9, time: '25-40 min', fee: '₹69',
     tags: ['sushi', 'japanese'], badge: 'Top rated',
     menu: [
       {
@@ -87,7 +89,7 @@ const restaurants = [
     id: 4,
     name: 'Spice Garden',
     img: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&q=80&auto=format&fit=crop',
-    rating: 4.7, time: '30-45 min', fee: '$1.49',
+    rating: 4.7, time: '30-45 min', fee: '₹59',
     tags: ['indian', 'curry'], badge: null,
     menu: [
       {
@@ -110,7 +112,7 @@ const restaurants = [
     id: 5,
     name: 'Taco Fiesta',
     img: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80&auto=format&fit=crop',
-    rating: 4.5, time: '15-25 min', fee: '$1.29',
+    rating: 4.5, time: '15-25 min', fee: '₹49',
     tags: ['mexican', 'tacos'], badge: 'New',
     menu: [
       {
@@ -133,7 +135,7 @@ const restaurants = [
     id: 6,
     name: 'Noodle House',
     img: 'https://images.unsplash.com/photo-1552566626-52f8b828add9?w=600&q=80&auto=format&fit=crop',
-    rating: 4.6, time: '20-35 min', fee: '$1.99',
+    rating: 4.6, time: '20-35 min', fee: '₹49',
     tags: ['noodles', 'asian'], badge: null,
     menu: [
       {
@@ -240,7 +242,7 @@ function renderRestaurants(list) {
       '</div>' +
       '<div class="restaurant-info">' +
       '<div class="restaurant-name">' + r.name + '</div>' +
-      '<div class="restaurant-meta"><span>⭐ ' + r.rating + '</span><span>🕐 ' + r.time + '</span><span>🚴 ' + r.fee + ' delivery</span></div>' +
+      '<div class="restaurant-meta"><span>⭐ ' + r.rating + '</span><span>🕐 ' + r.time + '</span><span>🚴 ' + formatDeliveryFee(r.fee) + ' delivery</span></div>' +
       '<div class="restaurant-tags">' + r.tags.map(function(t) { return '<span class="tag">' + t + '</span>'; }).join('') + '</div>' +
       '</div></div>';
   }).join('');
@@ -261,7 +263,7 @@ function openRestaurant(id) {
     '<img src="' + r.img + '" alt="' + r.name + '" />' +
     '<div class="rm-hero-overlay"></div>' +
     '<div class="rm-hero-info"><h2>' + r.name + '</h2>' +
-    '<div class="rm-meta"><span>⭐ ' + r.rating + '</span><span>🕐 ' + r.time + '</span><span>🚴 ' + r.fee + ' delivery</span></div>' +
+    '<div class="rm-meta"><span>⭐ ' + r.rating + '</span><span>🕐 ' + r.time + '</span><span>🚴 ' + formatDeliveryFee(r.fee) + ' delivery</span></div>' +
     '</div></div>';
 
   r.menu.forEach(function(section) {
@@ -270,7 +272,7 @@ function openRestaurant(id) {
       html += '<div class="menu-item">' +
         '<div class="menu-item-img"><img src="' + item.img + '" alt="' + item.name + '" onerror="this.parentNode.innerHTML=\'' + item.emoji + '\'" /></div>' +
         '<div class="menu-item-info"><div class="menu-item-name">' + item.name + '</div><div class="menu-item-desc">' + item.desc + '</div></div>' +
-        '<span class="menu-item-price">$' + item.price.toFixed(2) + '</span>' +
+        '<span class="menu-item-price">' + formatCurrency(toRupees(item.price)) + '</span>' +
         '<button class="add-btn" onclick="addToCart(\'' + item.name.replace(/'/g, '') + '\', ' + item.price + ', \'' + item.emoji + '\', event)">Add</button>' +
         '</div>';
     });
@@ -283,6 +285,7 @@ function openRestaurant(id) {
 
 function addToCart(name, price, emoji, event) {
   if (event) event.stopPropagation();
+  price = toRupees(price);
   var existing = null;
   for (var i = 0; i < cart.length; i++) { if (cart[i].name === name) { existing = cart[i]; break; } }
   if (existing) { existing.qty += 1; } else { cart.push({ name: name, price: price, emoji: emoji, qty: 1 }); }
@@ -312,7 +315,7 @@ function updateCart() {
   cart.forEach(function(item) {
     html += '<div class="cart-item">' +
       '<div class="cart-item-img">' + item.emoji + '</div>' +
-      '<div class="cart-item-info"><div class="cart-item-name">' + item.name + '</div><div class="cart-item-price">$' + (item.price * item.qty).toFixed(2) + '</div></div>' +
+      '<div class="cart-item-info"><div class="cart-item-name">' + item.name + '</div><div class="cart-item-price">' + formatCurrency(item.price * item.qty) + '</div></div>' +
       '<div class="cart-item-qty">' +
       '<button class="qty-btn" onclick="removeFromCart(\'' + item.name.replace(/'/g, '') + '\')">−</button>' +
       '<span class="qty-num">' + item.qty + '</span>' +
@@ -321,8 +324,8 @@ function updateCart() {
   });
   itemsEl.innerHTML = html;
   var subtotal = cart.reduce(function(s, i) { return s + i.price * i.qty; }, 0);
-  document.getElementById('cart-subtotal').textContent = '$' + subtotal.toFixed(2);
-  document.getElementById('cart-total').textContent = '$' + (subtotal + 2.99).toFixed(2);
+  document.getElementById('cart-subtotal').textContent = formatCurrency(subtotal);
+  document.getElementById('cart-total').textContent = formatCurrency(subtotal + DELIVERY_FEE);
   footerEl.style.display = 'block';
 }
 
@@ -353,7 +356,7 @@ function placeOrder(event) {
     address: inputs[2].value,
     payment: inputs[3].value,
     subtotal: cart.reduce(function(s, i) { return s + i.price * i.qty; }, 0),
-    total: cart.reduce(function(s, i) { return s + i.price * i.qty; }, 0) + 2.99,
+    total: cart.reduce(function(s, i) { return s + i.price * i.qty; }, 0) + DELIVERY_FEE,
     items: cart.slice()
   };
   closeModal('checkout-modal');
@@ -381,8 +384,8 @@ function openModal(id) {
       mini.innerHTML = '<p style="color:var(--text-muted);font-size:0.85rem">No items in cart.</p>';
     } else {
       var subtotal = cart.reduce(function(s, i) { return s + i.price * i.qty; }, 0);
-      var rows = cart.map(function(i) { return '<div class="osm-row"><span>' + i.emoji + ' ' + i.name + ' x' + i.qty + '</span><span>$' + (i.price * i.qty).toFixed(2) + '</span></div>'; }).join('');
-      mini.innerHTML = rows + '<div class="osm-row"><span>Delivery fee</span><span>$2.99</span></div><div class="osm-row osm-total"><span>Total</span><span>$' + (subtotal + 2.99).toFixed(2) + '</span></div>';
+      var rows = cart.map(function(i) { return '<div class="osm-row"><span>' + i.emoji + ' ' + i.name + ' x' + i.qty + '</span><span>' + formatCurrency(i.price * i.qty) + '</span></div>'; }).join('');
+      mini.innerHTML = rows + '<div class="osm-row"><span>Delivery fee</span><span>' + formatCurrency(DELIVERY_FEE) + '</span></div><div class="osm-row osm-total"><span>Total</span><span>' + formatCurrency(subtotal + DELIVERY_FEE) + '</span></div>';
     }
     document.getElementById('cart-sidebar').classList.remove('open');
     document.getElementById('cart-overlay').classList.remove('open');
@@ -404,6 +407,11 @@ function closeModalOnOverlay(event, id) {
   if (event.target === event.currentTarget) closeModal(id);
 }
 
+function showDemoTracking() {
+  closeModal('success-modal');
+  openModal('tracking-modal');
+}
+
 function handleLogin(event) {
   event.preventDefault();
   if (typeof window.clerkSignIn === 'function') {
@@ -422,7 +430,7 @@ function showToast(message) {
 
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') {
-    ['restaurant-modal', 'checkout-modal', 'login-modal', 'success-modal'].forEach(closeModal);
+    ['restaurant-modal', 'checkout-modal', 'login-modal', 'success-modal', 'tracking-modal'].forEach(closeModal);
     document.getElementById('cart-sidebar').classList.remove('open');
     document.getElementById('cart-overlay').classList.remove('open');
     document.body.style.overflow = '';
@@ -444,5 +452,6 @@ window.toggleMobileMenu = toggleMobileMenu;
 window.openModal = openModal;
 window.closeModal = closeModal;
 window.closeModalOnOverlay = closeModalOnOverlay;
+window.showDemoTracking = showDemoTracking;
 window.placeOrder = placeOrder;
 window.toggleFav = toggleFav;
