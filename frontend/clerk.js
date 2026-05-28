@@ -4,7 +4,7 @@ let initPromise = null;
 
 export async function initClerk() {
   if (initialized) {
-    updateNavAuth();
+    await refreshNavAuth();
     return;
   }
 
@@ -26,11 +26,10 @@ export async function initClerk() {
       initialized = true;
       window.__clerk = clerk;
 
-      updateNavAuth();
+      await refreshNavAuth();
+      startAuthRefreshWatchers();
 
-      clerk.addListener(() => {
-        updateNavAuth();
-      });
+      clerk.addListener(refreshNavAuth);
     })().catch((err) => {
       initPromise = null;
       console.error('Clerk init error:', err);
@@ -40,6 +39,35 @@ export async function initClerk() {
   }
 
   await initPromise;
+}
+
+async function refreshNavAuth() {
+  if (!clerk) {
+    updateNavAuth();
+    return;
+  }
+
+  await Promise.all([
+    clerk.session?.reload?.().catch(() => {}),
+    clerk.user?.reload?.().catch(() => {})
+  ]);
+  updateNavAuth();
+}
+
+let authWatchersStarted = false;
+function startAuthRefreshWatchers() {
+  if (authWatchersStarted) return;
+  authWatchersStarted = true;
+
+  window.addEventListener('pageshow', refreshNavAuth);
+  window.addEventListener('focus', refreshNavAuth);
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') refreshNavAuth();
+  });
+
+  [250, 1000, 2500].forEach((delay) => {
+    window.setTimeout(refreshNavAuth, delay);
+  });
 }
 
 function updateNavAuth() {

@@ -6,6 +6,8 @@ import './app.js';
 window.saveOrder = saveOrder;
 
 document.addEventListener('DOMContentLoaded', async () => {
+  const clerkReady = initClerk();
+
   // Load restaurants from Express API
   const loaded = await loadRestaurants();
   if (loaded.length > 0 && window.restaurants) {
@@ -14,6 +16,5 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (typeof window.renderRestaurants === 'function') window.renderRestaurants(window.restaurants);
   }
 
-  // Init Clerk auth
-  await initClerk();
+  await clerkReady;
 });

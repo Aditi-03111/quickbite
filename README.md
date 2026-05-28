@@ -2,6 +2,8 @@
 
 A modern food delivery web app built with vanilla HTML/CSS/JS, Vite, Supabase (PostgreSQL), and Clerk authentication.
 
+🌐 Live app: [quickbite-8ajkwlllb-aditi-03111s-projects.vercel.app](https://quickbite-8ajkwlllb-aditi-03111s-projects.vercel.app)
+
 ![QuickBite](https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1200&q=80&auto=format&fit=crop)
 
 ---
