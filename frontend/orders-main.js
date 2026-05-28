@@ -1,5 +1,5 @@
-import { db } from './supabase.js';
-import { getClerkUserId, initClerk } from './clerk.js';
+import { initClerk } from './clerk.js';
+import { fetchOrders } from './supabase.js';
 
 var toastTimer;
 
@@ -14,32 +14,17 @@ function showToast(msg) {
 
 async function loadOrders() {
   var el = document.getElementById('orders-list');
-  var clerkUserId = getClerkUserId();
-
-  if (!clerkUserId) {
-    el.innerHTML = '<div class="empty-orders"><div>🔐</div><h3>Sign in to view orders</h3><p>Your orders are saved to your account.</p><button class="btn btn-primary" onclick="clerkSignIn()">Sign in</button></div>';
-    return;
-  }
-
   try {
-    var { data: orders, error } = await db
-      .from('orders')
-      .select('*, order_items(*)')
-      .eq('clerk_user_id', clerkUserId)
-      .order('created_at', { ascending: false });
-
-    if (error) throw error;
-
+    const orders = await fetchOrders();
     if (!orders || orders.length === 0) {
       el.innerHTML = '<div class="empty-orders"><div>🛍️</div><h3>No orders yet</h3><p>Place your first order from the <a href="menu.html" style="color:var(--primary)">menu</a></p></div>';
       return;
     }
-
     el.innerHTML = orders.map(function(o) {
       var date = new Date(o.created_at).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' });
       var statusClass = 'status-' + (o.status || 'received');
       var itemsHtml = (o.order_items || []).map(function(i) {
-        return '<div class="order-item-row"><span>' + (i.emoji || '') + ' ' + i.item_name + ' x ' + i.qty + '</span><span>$' + (i.price * i.qty).toFixed(2) + '</span></div>';
+        return '<div class="order-item-row"><span>' + (i.emoji || '') + ' ' + i.item_name + ' × ' + i.qty + '</span><span>$' + (i.price * i.qty).toFixed(2) + '</span></div>';
       }).join('');
       return '<div class="order-card">' +
         '<div class="order-header">' +

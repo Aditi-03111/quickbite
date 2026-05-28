@@ -387,12 +387,16 @@ function openModal(id) {
     document.getElementById('cart-sidebar').classList.remove('open');
     document.getElementById('cart-overlay').classList.remove('open');
   }
-  document.getElementById(id).classList.add('open');
+  var modalEl = document.getElementById(id);
+  if (!modalEl) return;
+  modalEl.classList.add('open');
   document.body.style.overflow = 'hidden';
 }
 
 function closeModal(id) {
-  document.getElementById(id).classList.remove('open');
+  var modalEl = document.getElementById(id);
+  if (!modalEl) return;
+  modalEl.classList.remove('open');
   document.body.style.overflow = '';
 }
 
@@ -404,60 +408,8 @@ function handleLogin(event) {
   event.preventDefault();
   if (typeof window.clerkSignIn === 'function') {
     window.clerkSignIn();
-    return;
-  }
-
-  var name = document.getElementById('login-name').value.trim();
-  if (!name) return;
-  localStorage.setItem('qb_user', name);
-  closeModal('login-modal');
-  updateAuthArea();
-  showToast('👋 Welcome, ' + name + '!');
-}
-
-function updateAuthArea() {
-  var name = localStorage.getItem('qb_user');
-  var area = document.getElementById('auth-area');
-  if (!area) return;
-  if (name) {
-    var initials = name.split(' ').map(function(w) { return w[0]; }).join('').toUpperCase().slice(0,2);
-    area.innerHTML =
-      '<div class="user-menu">' +
-        '<button class="user-btn" onclick="toggleUserDropdown()">' +
-          '<div class="user-avatar">' + initials + '</div>' +
-          '<span>' + name.split(' ')[0] + '</span>' +
-          '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>' +
-        '</button>' +
-        '<div class="user-dropdown" id="user-dropdown">' +
-          '<a href="orders.html">🛍️ My Orders</a>' +
-          '<button class="signout-btn" onclick="signOut()">🚪 Sign out</button>' +
-        '</div>' +
-      '</div>';
-  } else {
-    area.innerHTML =
-      '<button class="btn btn-ghost" onclick="clerkSignIn()">Sign in</button>' +
-      '<button class="btn btn-primary" onclick="clerkSignIn()">Get started</button>';
   }
 }
-
-function toggleUserDropdown() {
-  var dd = document.getElementById('user-dropdown');
-  if (dd) dd.classList.toggle('open');
-}
-
-function signOut() {
-  localStorage.removeItem('qb_user');
-  updateAuthArea();
-  showToast('Signed out successfully');
-}
-
-// Close dropdown when clicking outside
-document.addEventListener('click', function(e) {
-  if (!e.target.closest('.user-menu')) {
-    var dd = document.getElementById('user-dropdown');
-    if (dd) dd.classList.remove('open');
-  }
-});
 
 var toastTimer;
 function showToast(message) {

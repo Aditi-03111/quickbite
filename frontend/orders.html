@@ -24,8 +24,6 @@
     .order-meta { display: flex; gap: 24px; font-size: 0.84rem; color: var(--text-muted); margin-bottom: 16px; flex-wrap: wrap; }
     .order-items-list { border-top: 1px solid var(--border); padding-top: 14px; display: flex; flex-direction: column; gap: 8px; }
     .order-item-row { display: flex; justify-content: space-between; font-size: 0.88rem; }
-    .order-item-row span:first-child { color: var(--text); }
-    .order-item-row span:last-child { font-weight: 600; color: var(--primary); }
     .order-total-row { display: flex; justify-content: space-between; font-size: 1rem; font-weight: 700; border-top: 1px solid var(--border); padding-top: 12px; margin-top: 8px; }
     .empty-orders { text-align: center; padding: 80px 0; color: var(--text-muted); }
     .empty-orders div { font-size: 3.5rem; margin-bottom: 16px; }
@@ -41,11 +39,13 @@
       <nav class="nav-links">
         <a href="menu.html">Menu</a>
         <a href="index.html#restaurants">Restaurants</a>
+        <a href="index.html#how-it-works">How it works</a>
         <a href="orders.html" style="color:var(--primary)">My Orders</a>
       </nav>
       <div class="nav-actions">
-        <div id="auth-area"></div>
-        <a href="index.html" class="btn btn-ghost">← Back to home</a>
+        <div id="auth-area">
+          <a href="index.html" class="btn btn-ghost">← Back to home</a>
+        </div>
       </div>
     </div>
   </header>

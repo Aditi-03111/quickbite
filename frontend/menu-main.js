@@ -1,10 +1,9 @@
-import { loadRestaurants, saveOrder, db } from './supabase.js';
+import { loadRestaurants, saveOrder } from './supabase.js';
 import { initClerk } from './clerk.js';
 import './app.js';
 import './menu-page.js';
 
 window.saveOrder = saveOrder;
-window.db = db;
 
 document.addEventListener('DOMContentLoaded', async () => {
   window.initMenuPage();

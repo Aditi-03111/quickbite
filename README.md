@@ -101,26 +101,30 @@ erDiagram
 graph TD
     User["👤 User (Browser)"]
 
-    subgraph Frontend["Frontend — Vite"]
+    subgraph Frontend["Frontend — Vite (frontend/)"]
         A["index.html\nHome Page"]
         B["menu.html\nFull Menu"]
         C["orders.html\nMy Orders"]
         D["app.js\nCore Logic"]
-        E["supabase.js\nDB Client"]
+        E["supabase.js\nAPI Client"]
         F["clerk.js\nAuth Client"]
     end
 
+    subgraph Backend["Backend — Express (backend/)"]
+        G["server.js\nExpress API"]
+    end
+
     subgraph Supabase["☁️ Supabase (PostgreSQL)"]
-        G[("restaurants")]
-        H[("menu_sections")]
-        I[("menu_items")]
-        J[("orders")]
-        K[("order_items")]
+        H[("restaurants")]
+        I[("menu_sections")]
+        J[("menu_items")]
+        K[("orders")]
+        L[("order_items")]
     end
 
     subgraph Clerk["🔐 Clerk Auth"]
-        L["Google OAuth"]
-        M["User Session"]
+        M["Google OAuth"]
+        N["User Session"]
     end
 
     User --> A
@@ -129,13 +133,14 @@ graph TD
     A --> D
     D --> E
     D --> F
-    E --> G
-    E --> H
-    E --> I
-    E --> J
-    E --> K
-    F --> L
+    E -->|"/api/*"| G
+    G --> H
+    G --> I
+    G --> J
+    G --> K
+    G --> L
     F --> M
+    F --> N
 ```
 
 ---
@@ -164,21 +169,30 @@ flowchart LR
 
 ```
 quickbite/
-├── index.html          # Home page
-├── menu.html           # Full menu page
-├── orders.html         # My orders page
-├── styles.css          # Global styles
-├── menu.css            # Menu page styles
-├── app.js              # Core app logic (restaurants, cart, modals)
-├── main.js             # Entry point (Supabase + Clerk init)
-├── supabase.js         # Supabase client + DB functions
-├── clerk.js            # Clerk auth integration
-├── menu-page.js        # Menu page logic
-├── schema.sql          # Database schema
-├── seed.sql            # Seed data
-├── fix_rls.sql         # RLS policy fixes
-├── vite.config.js      # Vite configuration
-├── .env.example        # Environment variable template
+├── frontend/               # Vite frontend (HTML/CSS/JS)
+│   ├── index.html          # Home page
+│   ├── menu.html           # Full menu page
+│   ├── orders.html         # My orders page
+│   ├── styles.css          # Global styles
+│   ├── menu.css            # Menu page styles
+│   ├── app.js              # Core app logic (restaurants, cart, modals)
+│   ├── main.js             # Entry point (API + Clerk init)
+│   ├── supabase.js         # API client (calls Express backend)
+│   ├── clerk.js            # Clerk auth integration
+│   ├── menu-page.js        # Menu page logic
+│   ├── menu-main.js        # Menu page entry point
+│   ├── orders-main.js      # Orders page entry point
+│   ├── vite.config.js      # Vite configuration (with /api proxy)
+│   └── .env                # Frontend env vars (VITE_API_URL, VITE_CLERK_*)
+├── backend/                # Express.js API server
+│   ├── server.js           # Express server with all API routes
+│   ├── package.json        # Backend dependencies
+│   └── .env                # Backend env vars (SUPABASE_URL, SUPABASE_SERVICE_KEY)
+├── schema.sql              # Database schema
+├── seed.sql                # Seed data
+├── fix_rls.sql             # RLS policy fixes
+├── render.yaml             # Render.com deployment config
+├── .env.example            # Environment variable template
 └── .gitignore
 ```
 
@@ -193,23 +207,34 @@ git clone https://github.com/YOUR_USERNAME/quickbite.git
 cd quickbite
 ```
 
-### 2. Install dependencies
+### 2. Set up the backend
 
 ```bash
+cd backend
 npm install
 ```
 
-### 3. Set up environment variables
-
-```bash
-cp .env.example .env
-```
-
-Fill in your keys:
+Copy `.env.example` to `backend/.env` and fill in your Supabase service key:
 
 ```env
-VITE_SUPABASE_URL=https://your-project.supabase.co
-VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_SERVICE_KEY=your_supabase_service_role_key
+PORT=3001
+```
+
+> ⚠️ Use the **service role key** (not the anon key) — it's secret and stays server-side only.
+
+### 3. Set up the frontend
+
+```bash
+cd frontend
+npm install
+```
+
+Copy `.env.example` to `frontend/.env`:
+
+```env
+VITE_API_URL=http://localhost:3001
 VITE_CLERK_PUBLISHABLE_KEY=pk_test_your_clerk_key
 ```
 
@@ -221,22 +246,42 @@ In your [Supabase SQL Editor](https://supabase.com/dashboard):
 2. Run `seed.sql` — populates restaurants and menu items
 3. Run `fix_rls.sql` — sets up Row Level Security policies
 
-### 5. Run the dev server
+### 5. Run both servers simultaneously
+
+In one terminal, start the API:
 
 ```bash
-npm run dev
+cd backend && npm run dev
 ```
 
-Open [http://localhost:5173](http://localhost:5173)
+In another terminal, start the frontend:
+
+```bash
+cd frontend && npm run dev
+```
+
+- API runs on [http://localhost:3001](http://localhost:3001)
+- Frontend runs on [http://localhost:5173](http://localhost:5173)
+
+The Vite dev server proxies all `/api/*` requests to the backend automatically.
 
 ---
 
 ## 🔐 Environment Variables
 
+### Backend (`backend/.env`)
+
 | Variable | Description |
 |----------|-------------|
-| `VITE_SUPABASE_URL` | Your Supabase project URL |
-| `VITE_SUPABASE_ANON_KEY` | Supabase publishable/anon key |
+| `SUPABASE_URL` | Your Supabase project URL |
+| `SUPABASE_SERVICE_KEY` | Supabase **service role** key (secret — never expose to frontend) |
+| `PORT` | Port for the Express server (default: 3001) |
+
+### Frontend (`frontend/.env`)
+
+| Variable | Description |
+|----------|-------------|
+| `VITE_API_URL` | URL of the Express backend (e.g. `http://localhost:3001`) |
 | `VITE_CLERK_PUBLISHABLE_KEY` | Clerk publishable key |
 
 ---
