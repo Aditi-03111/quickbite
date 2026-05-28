@@ -16,6 +16,10 @@
   },
   "dependencies": {
     "@clerk/clerk-js": "^6.12.1",
-    "@supabase/supabase-js": "^2.106.2"
+    "@clerk/express": "^2.1.22",
+    "@supabase/supabase-js": "^2.106.2",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1"
   }
 }
